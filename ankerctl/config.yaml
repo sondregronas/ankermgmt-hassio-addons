@@ -2,9 +2,10 @@ name: "ankerctl"
 description: "The official ankerctl addon"
 version: "1.0.0"
 slug: "ankerctl"
-ingress: false # Doesn't work yet, might need some source code changes
+ingress: true
 ingress_port: 4470
-ingress_stream: true
+ingress_url: "/ankerctl"
+ingress_stream: false
 init: true
 host_network: true
 map:
