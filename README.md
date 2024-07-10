@@ -1,5 +1,5 @@
 > **NOTE**
-> The addon in this repository should be considered a work in progress!
+> This is a fork with pending pull requests to the main repo. This AddOn repo might break without ever getting patched.
 
 # ankermgmt hassio addons repository
 ## Installation
@@ -11,7 +11,7 @@ If you want to do add the repository manually, please follow the procedure highl
 ## Add-on provided by this repository
 &#10003;  [ankerctl](ankerctl/) : Monitor your AnkerMake printer
 
-&emsp;&emsp;![Version](https://img.shields.io/badge/dynamic/yaml?label=Version&query=%24.version&url=https%3A%2F%2Fraw.githubusercontent.com%2Fankermgmt%2Fankermgmt-hassio-addons%2Fmaster%2Fankerctl%2Fconfig.yaml)
+&emsp;&emsp;![Version](https://img.shields.io/badge/dynamic/yaml?label=Version&query=%24.version&url=https%3A%2F%2Fraw.githubusercontent.com%2Fsondregronas%2Fankermgmt-hassio-addons%2Fmaster%2Fankerctl%2Fconfig.yaml)
 ![aarch64][aarch64-badge]
 ![amd64][amd64-badge]
 ![armv7][armv7-badge]
@@ -29,4 +29,4 @@ You have several options to get them answered:
 [armv7-badge]: https://img.shields.io/badge/armv7--green.svg?logo=arm
 [forum]: https://community.home-assistant.io/
 [repository-badge]: https://img.shields.io/badge/Add%20repository%20to%20my-Home%20Assistant-41BDF5?logo=home-assistant&style=for-the-badge
-[repository-url]: https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fankermgmt%2Fankermgmt-hassio-addons
+[repository-url]: https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fsondregronas%2Fankermgmt-hassio-addons
