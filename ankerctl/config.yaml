@@ -5,7 +5,7 @@ slug: "ankerctl"
 ingress: true
 ingress_port: 4470
 ingress_url: "/ankerctl"
-ingress_stream: false
+ingress_stream: true
 init: true
 host_network: true
 map:
