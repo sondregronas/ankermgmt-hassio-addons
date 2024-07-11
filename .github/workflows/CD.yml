@@ -25,7 +25,6 @@ jobs:
           _curl(){ curl -H "Authorization: Bearer $token" "$@"; }
           latest_version=$(_curl -s "https://ghcr.io/v2/${{ env.repository }}/tags/list" | jq -r '.tags[-1]')
           echo "latest_version=$latest_version" >> $GITHUB_ENV
-          echo "$latest_version"
 
       # Checkout the repository
       - name: Checkout repository
@@ -34,16 +33,14 @@ jobs:
       - name: Update version in config.yaml
         run: |
           sed -i "s/version: \".*\"/version: \"${{ env.latest_version }}\"/g" ${{ env.addon_dir }}/config.yaml
-          cat ${{ env.addon_dir }}/config.yaml
 
       - name: Update version in build.yaml
         run: |
           cat ${{ env.addon_dir }}/build.yaml | perl -pe 's/(ghcr\.io.+\:).+\"/\1\2${{ env.latest_version }}\"/g' > ${{ env.addon_dir }}/build.yaml
-          cat ${{ env.addon_dir }}/build.yaml
 
       - name: Commit changes
         run: |
           git config --global user.name 'GitHub Actions'
           git config --global user.email 'actions@github.com'
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-          git commit -am "[auto] Update version to $latest_version"
+          git commit -am "[auto] Update version to ${{ env.latest_version }}"
