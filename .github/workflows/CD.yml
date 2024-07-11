@@ -36,7 +36,8 @@ jobs:
 
       - name: Update version in build.yaml
         run: |
-          cat ${{ env.addon_dir }}/build.yaml | perl -pe 's/(ghcr\.io.+\:).+\"/\1\2${{ env.latest_version }}\"/g' > ${{ env.addon_dir }}/build.yaml
+          cat ${{ env.addon_dir }}/build.yaml | perl -pe 's/(ghcr\.io.+\:).+\"/\1\2${{ env.latest_version }}\"/g' > ${{ env.addon_dir }}/_build.yaml
+          mv ${{ env.addon_dir }}/_build.yaml ${{ env.addon_dir }}/build.yaml
 
       - name: Commit changes
         run: |
