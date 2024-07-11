@@ -21,11 +21,10 @@ jobs:
       - name: Get latest version
         id: get_version
         run: |
-          token = "$(curl "https://ghcr.io/token?scope=repository:${{ env.repository }}:pull" | awk -F'"' '$0=$4')"
-          # Example json: {"name":"eggplants/asciiquarium-docker","tags":["0.0.0","0.0","latest"]}
-          latest_version=$(curl -s "https://ghcr.io/v2/${{ env.repository }}/tags/list" | jq -r '.tags[-1]')
+          token="$(curl "https://ghcr.io/token?scope=repository:${{ env.repository }}:pull" | awk -F'"' '$0=$4')"
+          _curl(){ curl -H "Authorization: Bearer $token" "$@"; }
+          latest_version=$(_curl -s "https://ghcr.io/v2/${{ env.repository }}/tags/list" | jq -r '.tags[-1]')
           echo "latest_version=$latest_version" >> $GITHUB_ENV
-          echo "$latest_version"
 
       # Checkout the repository
       - name: Checkout repository
@@ -33,18 +32,16 @@ jobs:
 
       - name: Update version in config.yaml
         run: |
-          sed -i "s/version: \".*\"/version: \"$latest_version\"/g" ${{ env.addon_dir }}/config.yaml
-          cat ${{ env.addon_dir }}/config.yaml
+          sed -i "s/version: \".*\"/version: \"${{ env.latest_version }}\"/g" ${{ env.addon_dir }}/config.yaml
 
       - name: Update version in build.yaml
         run: |
-          sed -i "s/ghcr.io/${{ env.repository }}:.*\"/ghcr.io/${{ env.repository }}:$latest_version\"/g" ${{ env.addon_dir }}/build.yaml
-          cat ${{ env.addon_dir }}/build.yaml
+          cat ${{ env.addon_dir }}/build.yaml | perl -pe 's/(ghcr\.io.+\:).+\"/\1\2${{ env.latest_version }}\"/g' > ${{ env.addon_dir }}/_build.yaml
+          mv ${{ env.addon_dir }}/_build.yaml ${{ env.addon_dir }}/build.yaml
 
-      # Commit the new version
-      #- name: Commit changes
-      #  run: |
-      #    git config --global user.name 'GitHub Actions'
-      #    git config --global user.email 'actions@github.com'
-      #    git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-      #    git commit -am "[auto] Update version to $latest_version"
+      - name: Commit changes
+        run: |
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'actions@github.com'
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          git commit -am "[auto] Update version to ${{ env.latest_version }}" && git push || echo "No changes to commit"
