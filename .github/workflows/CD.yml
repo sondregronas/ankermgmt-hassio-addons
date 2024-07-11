@@ -1,0 +1,50 @@
+name: Update AddOn Version
+
+on:
+  # TODO: Replace with a less taxing repository_dispatch event
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'  # Run every day at midnight
+
+permissions:
+  contents: write
+
+env:
+  # Must be lowercase
+  repository: ankermgmt/ankermake-m5-protocol
+  addon_dir: ankerctl
+
+jobs:
+  update-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get latest version
+        id: get_version
+        run: |
+          token = "$(curl "https://ghcr.io/token?scope=repository:${{ env.repository }}:pull" | awk -F'"' '$0=$4')"
+          # Example json: {"name":"eggplants/asciiquarium-docker","tags":["0.0.0","0.0","latest"]}
+          latest_version=$(curl -s "https://ghcr.io/v2/${{ env.repository }}/tags/list" | jq -r '.tags[-1]')
+          echo "latest_version=$latest_version" >> $GITHUB_ENV
+          echo "$latest_version"
+
+      # Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Update version in config.yaml
+        run: |
+          sed -i "s/version: \".*\"/version: \"$latest_version\"/g" ${{ env.addon_dir }}/config.yaml
+          cat ${{ env.addon_dir }}/config.yaml
+
+      - name: Update version in build.yaml
+        run: |
+          sed -i "s/ghcr.io/${{ env.repository }}:.*\"/ghcr.io/${{ env.repository }}:$latest_version\"/g" ${{ env.addon_dir }}/build.yaml
+          cat ${{ env.addon_dir }}/build.yaml
+
+      # Commit the new version
+      #- name: Commit changes
+      #  run: |
+      #    git config --global user.name 'GitHub Actions'
+      #    git config --global user.email 'actions@github.com'
+      #    git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+      #    git commit -am "[auto] Update version to $latest_version"
