@@ -33,12 +33,12 @@ jobs:
 
       - name: Update version in config.yaml
         run: |
-          sed -i "s/version: \".*\"/version: \"$latest_version\"/g" ${{ env.addon_dir }}/config.yaml
+          sed -i "s/version: \".*\"/version: \"${{ env.latest_version }}\"/g" ${{ env.addon_dir }}/config.yaml
           cat ${{ env.addon_dir }}/config.yaml
 
       - name: Update version in build.yaml
         run: |
-          sed -i "s/ghcr.io/${{ env.repository }}:.*\"/ghcr.io/${{ env.repository }}:$latest_version\"/g" ${{ env.addon_dir }}/build.yaml
+          cat ${{ env.addon_dir }}/build.yaml | perl -pe 's/(ghcr\.io.+\:).+\"/\1\2${{ env.latest_version }}\"/g' > ${{ env.addon_dir }}/build.yaml
           cat ${{ env.addon_dir }}/build.yaml
 
       # Commit the new version
