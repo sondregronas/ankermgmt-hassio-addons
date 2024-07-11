@@ -22,7 +22,7 @@ jobs:
         id: get_version
         run: |
           token="$(curl "https://ghcr.io/token?scope=repository:${{ env.repository }}:pull" | awk -F'"' '$0=$4')"
-          _curl(){ curl -H "Authorization: Bearer ${{token}}" "$1" }
+          _curl(){ curl -H "Authorization: Bearer $token" "$@"; }
           latest_version=$(_curl -s "https://ghcr.io/v2/${{ env.repository }}/tags/list" | jq -r '.tags[-1]')
           echo "latest_version=$latest_version" >> $GITHUB_ENV
           echo "$latest_version"
