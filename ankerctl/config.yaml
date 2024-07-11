@@ -1,6 +1,6 @@
 name: "ankerctl"
 description: "The official ankerctl addon"
-version: "1.0.0"
+version: "v1.2.0"
 slug: "ankerctl"
 ingress: false
 ingress_port: 4470
