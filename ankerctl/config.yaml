@@ -3,7 +3,7 @@ description: "An unofficial fork of the ankerctl addon by sondregronas"
 version: "v1.2.1"
 slug: "ankerctl"
 ingress: true
-ingress_port: 0
+ingress_port: 4470
 ingress_stream: true
 panel_icon: "mdi:printer-3d"
 init: true
