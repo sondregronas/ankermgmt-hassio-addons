@@ -1,10 +1,11 @@
 name: Update AddOn Version
 
 on:
-  # TODO: Replace with a less taxing repository_dispatch event
   workflow_dispatch:
-  schedule:
+  schedule:  # TODO: Remove when the repository_dispatch event is configured
     - cron: '0 0 * * *'  # Run every day at midnight
+  repository_dispatch:
+    types: [update-version]  # Needs to be configured in the repository_dispatch event of the repository
 
 permissions:
   contents: write
@@ -26,7 +27,6 @@ jobs:
           latest_version=$(_curl -s "https://ghcr.io/v2/${{ env.repository }}/tags/list" | jq -r '.tags[-1]')
           echo "latest_version=$latest_version" >> $GITHUB_ENV
 
-      # Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -38,6 +38,10 @@ jobs:
         run: |
           cat ${{ env.addon_dir }}/build.yaml | perl -pe 's/(ghcr\.io.+\:).+\"/\1\2${{ env.latest_version }}\"/g' > ${{ env.addon_dir }}/_build.yaml
           mv ${{ env.addon_dir }}/_build.yaml ${{ env.addon_dir }}/build.yaml
+
+      - name: Sync remote changelog
+        run: |
+          curl -s "https://api.github.com/repos/${{ env.repository }}/contents/CHANGELOG.md" | jq -r '.content' | base64 -d > CHANGELOG.md
 
       - name: Commit changes
         run: |
