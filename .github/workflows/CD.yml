@@ -41,7 +41,7 @@ jobs:
 
       - name: Sync remote changelog
         run: |
-          curl -s "https://api.github.com/repos/${{ env.repository }}/contents/CHANGELOG.md" | jq -r '.content' | base64 -d > ${{ env.repository }}/CHANGELOG.md
+          curl -s "https://api.github.com/repos/${{ env.repository }}/contents/CHANGELOG.md" | jq -r '.content' | base64 -d > ${{ env.addon_dir }}/CHANGELOG.md
 
       - name: Commit changes
         run: |
