@@ -1,6 +1,6 @@
 name: "ankerctl"
 description: "An unofficial fork of the ankerctl addon by sondregronas"
-version: "v1.2.3"
+version: ""
 slug: "ankerctl"
 ingress: false  # broken
 ingress_port: 4470
