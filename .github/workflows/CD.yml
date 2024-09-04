@@ -26,6 +26,10 @@ jobs:
           _curl(){ curl -H "Authorization: Bearer $token" "$@"; }
           latest_version=$(_curl -s "https://ghcr.io/v2/${{ env.repository }}/tags/list" | jq -r '.tags[-1]')
           echo "latest_version=$latest_version" >> $GITHUB_ENV
+          if [ -z "$latest_version" ]; then
+            echo "Failed to get latest version"
+            exit 1
+          fi
 
       - name: Checkout repository
         uses: actions/checkout@v4
